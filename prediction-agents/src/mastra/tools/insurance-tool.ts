@@ -5,21 +5,32 @@ import { z } from 'zod';
 function mockInsurancePrediction({ amount, preferences }: { amount: number; preferences?: any }) {
   // Simulate diversification across 3 flights
   const flights = [
-    { flight: 'NYC-LON', date: '2024-07-01', airline: 'Delta', allocation: 0.4, risk: 0.12, yield: 0.08 },
-    { flight: 'LAX-TYO', date: '2024-07-05', airline: 'ANA', allocation: 0.35, risk: 0.09, yield: 0.10 },
-    { flight: 'SFO-PAR', date: '2024-07-10', airline: 'Air France', allocation: 0.25, risk: 0.15, yield: 0.12 },
+    { flight: 'NYC-LON', date: '2024-07-01', airline: 'Delta', allocation: 0.4 },
+    { flight: 'LAX-TYO', date: '2024-07-05', airline: 'ANA', allocation: 0.35 },
+    { flight: 'SFO-PAR', date: '2024-07-10', airline: 'Air France', allocation: 0.25 },
   ];
-  const breakdown = flights.map(f => ({
-    ...f,
-    invested: +(amount * f.allocation).toFixed(2),
-    expectedReturn: +(amount * f.allocation * (1 + f.yield - f.risk)).toFixed(2),
-  }));
-  const totalExpectedYield = breakdown.reduce((acc, f) => acc + (f.expectedReturn - f.invested), 0);
-  const avgRisk = breakdown.reduce((acc, f) => acc + f.risk * f.allocation, 0);
+  // Assign a random yield between 6% and 10% for each flight
+  const getRandomYield = () => +(6 + Math.random() * 4).toFixed(2) / 100;
+  const breakdown = flights.map(f => {
+    const yieldRate = getRandomYield();
+    const invested = +(amount * f.allocation).toFixed(2);
+    const expectedReturn = +(invested * (1 + yieldRate)).toFixed(2);
+    return {
+      ...f,
+      risk: 0, // For demo, set risk to 0
+      yield: +(yieldRate * 100).toFixed(2), // as percent
+      invested,
+      expectedReturn,
+    };
+  });
+  // Calculate total expected yield (sum of all yields minus invested)
+  const totalInvested = amount;
+  const totalExpectedReturn = breakdown.reduce((acc, f) => acc + f.expectedReturn, 0);
+  const expectedYield = +(totalExpectedReturn - totalInvested).toFixed(2);
   return {
-    totalInvested: amount,
-    expectedYield: +totalExpectedYield.toFixed(2),
-    averageRisk: +avgRisk.toFixed(2),
+    totalInvested,
+    expectedYield,
+    averageRisk: 0,
     diversification: breakdown,
   };
 }
