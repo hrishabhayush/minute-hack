@@ -1,6 +1,6 @@
-# Cove: The Universal Blockchain Insurance Layer
+# Cove: Creating Event-driven Insurance Prediction markets
 
-Cove is building the first blockchain Layer 1 (L1) designed to unify all parametric insurance markets—starting with flight delay insurance, but built to scale across every vertical: weather, cloud outages, sports events, and more. 
+Cove is building parametric insurance markets—starting with flight delay insurance, but built to scale across every vertical: weather, cloud outages, sports events, and more. 
 
 ## Why Cove?
 
